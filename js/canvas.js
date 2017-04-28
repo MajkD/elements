@@ -1,15 +1,10 @@
 Canvas = function() {
-  var context = undefined;
-  // var contain..
+  this.context = undefined;
 }
 
 Canvas.prototype.getContext = function() {
-  return context;
+  this.context;
 }
-
-// Canvas.prototype.getHeight = function() {
-//   return context;
-// }
 
 Canvas.prototype.init = function() {
   myCanvasContainer = document.createElement('div');
@@ -32,7 +27,7 @@ Canvas.prototype.init = function() {
   // myCanvas.style.backgroundColor = "gray";
   myCanvasContainer.appendChild(myCanvas);
 
-  context = myCanvas.getContext('2d');
+  this.context = myCanvas.getContext('2d');
 }
 
 module.exports = Canvas;

@@ -5,14 +5,24 @@
 var ipc = require('electron').ipcRenderer;
 window.onerror = function(error, url, line) {
     ipc.send('errorInWindow', error);
+    ipc.send('errorInWindow', "In: " + url + ": " + line);
 };
 
+var logger = function(obj){
+  ipc.send('logToMain', obj);
+}
+
 require('./js/canvas.js')
+require('./js/elements.js')
+
 canvas = new Canvas();
 canvas.init();
 
-require('./js/logger.js')
-logger = new Logger();
+elements = new Elements(logger);
+elements.init();
 
-logger.logToScreen("foo and bar....");
-logger.draw(canvas);
+var tick = function() {
+   elements.update();
+}
+
+setInterval(tick, (1000 / 60));

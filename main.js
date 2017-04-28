@@ -31,3 +31,7 @@ var ipc = require('electron').ipcMain;
 ipc.on('errorInWindow', function(event, data){
     console.log(data)
 });
+
+ipc.on('logToMain', function(event, data){
+    console.log(data)
+});
