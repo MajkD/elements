@@ -21,7 +21,7 @@ canvas = new Canvas();
 canvas.init();
 
 imageLoader = new ImageLoader();
-logger = new Logger();
+screenLogger = new ScreenLogger();
 
 elements = new Elements(logger);
 elements.init();
@@ -31,7 +31,7 @@ function showFPS(delta) {
   fpsTimer += delta;
   if(fpsTimer > 100) {
     var fps = parseInt(1000 / delta)
-    logger.logToScreen("FPS: " + fps);
+    screenLogger.logToScreen("FPS: " + fps);
     fpsTimer = 0;
   }
 }
@@ -49,7 +49,7 @@ var tick = function() {
 function render() {
   canvas.clear();
   elements.render();
-  logger.render();
+  screenLogger.render();
 }
 
 imageLoader.loadImages(imagesLoaded);

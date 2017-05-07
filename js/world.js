@@ -1,6 +1,6 @@
 require('./grid/grid.js')
 
-World = function(logger) {
+World = function() {
 }
 
 World.prototype.init = function() {

@@ -1,4 +1,4 @@
-Logger = function () {
+ScreenLogger = function () {
   this.xPos = 50;
   this.yPos = 680;
   this.message = "";
@@ -6,11 +6,11 @@ Logger = function () {
   this.fillStyle = "white";
 };
 
-Logger.prototype.logToScreen = function (message) {
+ScreenLogger.prototype.logToScreen = function (message) {
   this.message = message;
 }
 
-Logger.prototype.render = function () {
+ScreenLogger.prototype.render = function () {
   canvas.context.font = this.font;
   canvas.context.fillStyle = this.fillStyle;
   canvas.context.fillText(this.message, this.xPos, this.yPos);
