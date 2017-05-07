@@ -25,7 +25,7 @@ Grid.prototype.initGrid = function() {
         var xPos = x * this.tileWidth;
         var yPos = y * this.tileHeight;
         var index = (x * this.numTilesX) + y;
-        var tile = new Tile(this.tileWidth, this.tileHeight, xPos, yPos);
+        var tile = new Tile(this.tileWidth, this.tileHeight, { x: xPos, y: yPos } );
         this.tiles.push(tile);
         this.grid[index] = this.tiles.length - 1;
       }
@@ -33,8 +33,24 @@ Grid.prototype.initGrid = function() {
   }
 }
 
-Grid.prototype.getTile = function(index) {
-  return this.tiles[index];
+Grid.prototype.coordinatesInWorldBounds = function(x, y) {
+  if(x >= 0 && x < this.numTilesX && y >= 0 && y < this.numTilesY) {
+    return true;
+  }
+  return false;
+}
+
+Grid.prototype.collide = function(collidingArea) {
+  var x = parseInt(collidingArea.pointA.x / this.tileWidth);
+  var y = parseInt(collidingArea.pointA.y / this.tileHeight);
+  if(this.coordinatesInWorldBounds(x, y)) {
+    var index = (x * this.numTilesX) + y;
+    if(this.grid[index]) {
+      return { point: { x: collidingArea.pointA.x, y: collidingArea.pointA.y},
+               tile: this.tiles[this.grid[index]] };
+    }
+  }
+  return undefined;
 }
 
 Grid.prototype.render = function() {

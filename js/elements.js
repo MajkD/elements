@@ -7,7 +7,6 @@ Elements = function(logger) {
 
 Elements.prototype.init = function() {
   this.world = new World();
-  this.world.init();
 }
 
 Elements.prototype.update = function(delta) {

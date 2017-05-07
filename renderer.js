@@ -22,9 +22,7 @@ canvas.init();
 
 imageLoader = new ImageLoader();
 screenLogger = new ScreenLogger();
-
 elements = new Elements(logger);
-elements.init();
 
 var fpsTimer = 0;
 function showFPS(delta) {
@@ -54,6 +52,7 @@ function render() {
 
 imageLoader.loadImages(imagesLoaded);
 function imagesLoaded() {
+  elements.init();
   setInterval(tick, (1000 / 60));
 }
 
