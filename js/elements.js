@@ -15,7 +15,6 @@ Elements.prototype.update = function(delta) {
 }
 
 Elements.prototype.render = function() {
-  canvas.clear();
   this.world.render();
 }
 

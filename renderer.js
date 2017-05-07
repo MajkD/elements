@@ -15,21 +15,41 @@ var logger = function(obj){
 require('./js/canvas.js')
 require('./js/elements.js')
 require('./js/utils/imageLoader.js')
+require('./js/utils/logger.js')
 
 canvas = new Canvas();
 canvas.init();
 
 imageLoader = new ImageLoader();
+logger = new Logger();
 
 elements = new Elements(logger);
 elements.init();
 
+var fpsTimer = 0;
+function showFPS(delta) {
+  fpsTimer += delta;
+  if(fpsTimer > 100) {
+    var fps = parseInt(1000 / delta)
+    logger.logToScreen("FPS: " + fps);
+    fpsTimer = 0;
+  }
+}
+
 var lastUpdateTime = Date.now();
 var tick = function() {
   var currentTime = Date.now();
-   elements.update((currentTime - lastUpdateTime) / 1000.0);
-   elements.render();
-   lastUpdateTime = currentTime;
+  var delta = currentTime - lastUpdateTime;
+  showFPS(delta);
+  elements.update(delta);
+  render();
+  lastUpdateTime = currentTime;
+}
+
+function render() {
+  canvas.clear();
+  elements.render();
+  logger.render();
 }
 
 imageLoader.loadImages(imagesLoaded);
