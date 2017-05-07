@@ -1,14 +1,22 @@
+require('./world.js')
+
 log = undefined;
 Elements = function(logger) {
   log = logger;
 }
 
 Elements.prototype.init = function() {
-  log("Elements is alive!");
+  this.world = new World();
+  this.world.init();
 }
 
 Elements.prototype.update = function(delta) {
-  log("elements update");
+  this.world.update(delta);
+}
+
+Elements.prototype.render = function() {
+  canvas.clear();
+  this.world.render();
 }
 
 module.exports = Elements;

@@ -14,15 +14,26 @@ var logger = function(obj){
 
 require('./js/canvas.js')
 require('./js/elements.js')
+require('./js/utils/imageLoader.js')
 
 canvas = new Canvas();
 canvas.init();
 
+imageLoader = new ImageLoader();
+
 elements = new Elements(logger);
 elements.init();
 
+var lastUpdateTime = Date.now();
 var tick = function() {
-   elements.update();
+  var currentTime = Date.now();
+   elements.update((currentTime - lastUpdateTime) / 1000.0);
+   elements.render();
+   lastUpdateTime = currentTime;
 }
 
-setInterval(tick, (1000 / 60));
+imageLoader.loadImages(imagesLoaded);
+function imagesLoaded() {
+  setInterval(tick, (1000 / 60));
+}
+

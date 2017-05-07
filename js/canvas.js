@@ -1,5 +1,7 @@
 Canvas = function() {
   this.context = undefined;
+  this.canvas = undefined;
+  this.canvasContainer = undefined;
 }
 
 Canvas.prototype.getContext = function() {
@@ -7,27 +9,30 @@ Canvas.prototype.getContext = function() {
 }
 
 Canvas.prototype.init = function() {
-  myCanvasContainer = document.createElement('div');
-  document.body.appendChild(myCanvasContainer);
-  myCanvasContainer.style.position = "absolute";
-  myCanvasContainer.style.left = "0px";
-  myCanvasContainer.style.top = "0px";
-  myCanvasContainer.style.width = "100%";
-  myCanvasContainer.style.height = "100%";
-  myCanvasContainer.style.zIndex = "1000";
+  this.canvasContainer = document.createElement('div');
+  document.body.appendChild(this.canvasContainer);
+  this.canvasContainer.style.position = "absolute";
+  this.canvasContainer.style.left = "0px";
+  this.canvasContainer.style.top = "0px";
+  this.canvasContainer.style.width = "100%";
+  this.canvasContainer.style.height = "100%";
+  this.canvasContainer.style.zIndex = "1000";
 
-  myCanvas = document.createElement('canvas');
-  myCanvas.style.width = myCanvasContainer.scrollWidth + "px";
-  myCanvas.style.height = myCanvasContainer.scrollHeight + "px";
-  myCanvas.width = myCanvasContainer.scrollWidth;
-  myCanvas.height = myCanvasContainer.scrollHeight;
-  myCanvas.style.overflow = "visible";
-  myCanvas.style.position = "absolute";
-  myCanvas.style.backgroundColor = "#171717";
-  // myCanvas.style.backgroundColor = "gray";
-  myCanvasContainer.appendChild(myCanvas);
+  this.canvas = document.createElement('canvas');
+  this.canvas.style.width = this.canvasContainer.scrollWidth + "px";
+  this.canvas.style.height = this.canvasContainer.scrollHeight + "px";
+  this.canvas.width = this.canvasContainer.scrollWidth;
+  this.canvas.height = this.canvasContainer.scrollHeight;
+  this.canvas.style.overflow = "visible";
+  this.canvas.style.position = "absolute";
+  this.canvas.style.backgroundColor = "#171717";
+  this.canvasContainer.appendChild(this.canvas);
 
-  this.context = myCanvas.getContext('2d');
+  this.context = this.canvas.getContext('2d');
+}
+
+Canvas.prototype.clear = function() {
+  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); 
 }
 
 module.exports = Canvas;
