@@ -11,17 +11,30 @@ World.prototype.init = function() {
   this.player = new Player(this.startPos.x, this.startPos.y);
 }
 
+World.prototype.resetPlayer = function() {
+  log("reset player - TEMP");
+  this.player.pos.x = this.player.startPos.x;
+  this.player.pos.y = this.player.startPos.y - this.player.dimensions.height;
+  this.player.falling = true;
+  var length = this.grid.tiles.length;
+  for(var index = 0; index < length; index++) {
+    this.grid.tiles[index].debugUnmark();
+  }
+}
+
 World.prototype.update = function(delta) {
-  this.updatePlayerCollision();
   this.player.update(delta);
+  this.updatePlayerCollision();
 }
 
 World.prototype.updatePlayerCollision = function() {
-  var collidingArea = this.player.getCollidingFeetArea();
-  var collision = this.grid.collide(collidingArea);
-  if(collision) {
-    this.player.onGroundCollision(collision.point);
-    collision.tile.debugMark();
+  if(this.player.falling) {
+    var collidingArea = this.player.getCollidingFeetArea();
+    var collidedTile = this.grid.collide(collidingArea);
+    if(collidedTile) {
+      this.player.onGroundCollision(collidedTile);
+      collidedTile.debugMark();
+    }
   }
 }
 

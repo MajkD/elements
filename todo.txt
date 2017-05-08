@@ -1,5 +1,2 @@
-
-- Only want collision event when collision happened
-- Why landing on middle of tile?
 - return all colliding tiles
 - proper velocity handling

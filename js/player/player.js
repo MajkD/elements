@@ -1,6 +1,7 @@
 require('../utils/vector.js')
 
 Player = function(x, y) {
+  this.startPos = new Vector(x, y);
   this.pos = new Vector(x, y);
   this.velocity = new Vector(0, 0);
   this.acceleration = new Vector(0, 0);
@@ -9,7 +10,6 @@ Player = function(x, y) {
   this.dimensions = { "width": img.width, "height": img.height };
 
   this.falling = true;
-
   this.gravity = 0.98;
 }
 
@@ -19,11 +19,10 @@ Player.prototype.getCollidingFeetArea = function() {
   return { pointA: pointA, pointB: pointB };
 }
 
-Player.prototype.onGroundCollision = function(collisionPoint) {
-  log("Player collision: x: " + collisionPoint.x + " y: " + collisionPoint.y);
+Player.prototype.onGroundCollision = function(collidedTile) {
   this.falling = false;
   this.velocity.y = 0;
-  this.pos.y = collisionPoint.y - this.dimensions.height;
+  this.pos.y = collidedTile.pos.y - this.dimensions.height;
 }
 
 Player.prototype.update = function(delta) {

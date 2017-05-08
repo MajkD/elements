@@ -24,6 +24,10 @@ imageLoader = new ImageLoader();
 screenLogger = new ScreenLogger();
 elements = new Elements(logger);
 
+function handleMouseClicked(event) {
+  elements.mouseClicked();
+}
+
 var fpsTimer = 0;
 function showFPS(delta) {
   fpsTimer += delta;
@@ -49,6 +53,8 @@ function render() {
   elements.render();
   screenLogger.render();
 }
+
+document.onclick = handleMouseClicked;
 
 imageLoader.loadImages(imagesLoaded);
 function imagesLoaded() {

@@ -46,8 +46,7 @@ Grid.prototype.collide = function(collidingArea) {
   if(this.coordinatesInWorldBounds(x, y)) {
     var index = (x * this.numTilesX) + y;
     if(this.grid[index]) {
-      return { point: { x: collidingArea.pointA.x, y: collidingArea.pointA.y},
-               tile: this.tiles[this.grid[index]] };
+      return this.tiles[this.grid[index]];
     }
   }
   return undefined;

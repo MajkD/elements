@@ -17,4 +17,8 @@ Elements.prototype.render = function() {
   this.world.render();
 }
 
+Elements.prototype.mouseClicked = function() {
+  this.world.resetPlayer();
+}
+
 module.exports = Elements;

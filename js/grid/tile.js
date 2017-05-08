@@ -10,6 +10,10 @@ Tile.prototype.debugMark = function() {
   this.marked = true;
 }
 
+Tile.prototype.debugUnmark = function() {
+  this.marked = false;
+}
+
 Tile.prototype.render = function() {
   var img = imageLoader.getImage("tile");
   if(this.marked) {
