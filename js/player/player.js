@@ -19,10 +19,17 @@ Player.prototype.getCollidingFeetArea = function() {
   return { pointA: pointA, pointB: pointB };
 }
 
-Player.prototype.onGroundCollision = function(collidedTile) {
+Player.prototype.onGroundCollision = function(collidedTiles) {
   this.falling = false;
   this.velocity.y = 0;
-  this.pos.y = collidedTile.pos.y - this.dimensions.height;
+  var smallestY = Number.MAX_SAFE_INTEGER;
+  var numCollidedTiles = collidedTiles.length
+  for(var index = 0; index < numCollidedTiles; index++) {
+    if(collidedTiles[index].pos.y < smallestY) {
+      smallestY = collidedTiles[index].pos.y;
+    }
+  }
+  this.pos.y = smallestY - this.dimensions.height;
 }
 
 Player.prototype.update = function(delta) {

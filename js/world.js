@@ -30,10 +30,13 @@ World.prototype.update = function(delta) {
 World.prototype.updatePlayerCollision = function() {
   if(this.player.falling) {
     var collidingArea = this.player.getCollidingFeetArea();
-    var collidedTile = this.grid.collide(collidingArea);
-    if(collidedTile) {
-      this.player.onGroundCollision(collidedTile);
-      collidedTile.debugMark();
+    var collidedTiles = this.grid.collide(collidingArea);
+    if(collidedTiles.length > 0) {
+      this.player.onGroundCollision(collidedTiles);
+      var length = collidedTiles.length;
+      for(var index = 0; index < length; index++) {
+        collidedTiles[index].debugMark();
+      }
     }
   }
 }

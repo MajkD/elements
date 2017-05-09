@@ -41,15 +41,23 @@ Grid.prototype.coordinatesInWorldBounds = function(x, y) {
 }
 
 Grid.prototype.collide = function(collidingArea) {
-  var x = parseInt(collidingArea.pointA.x / this.tileWidth);
-  var y = parseInt(collidingArea.pointA.y / this.tileHeight);
-  if(this.coordinatesInWorldBounds(x, y)) {
-    var index = (x * this.numTilesX) + y;
-    if(this.grid[index]) {
-      return this.tiles[this.grid[index]];
+  var x1 = parseInt(collidingArea.pointA.x / this.tileWidth);
+  var y1 = parseInt(collidingArea.pointA.y / this.tileHeight);
+  var x2 = parseInt(collidingArea.pointB.x / this.tileWidth);
+  var y2 = parseInt(collidingArea.pointB.y / this.tileHeight);
+
+  var collidingTiles = [];
+  for(var x = x1; x <= x2; x++) {
+    for(var y = y1; y <= y2; y++) {
+      if(this.coordinatesInWorldBounds(x, y)) {
+        var index = (x * this.numTilesX) + y;
+        if(this.grid[index]) {
+          collidingTiles.push(this.tiles[this.grid[index]]);
+        }
+      }
     }
   }
-  return undefined;
+  return collidingTiles;
 }
 
 Grid.prototype.render = function() {

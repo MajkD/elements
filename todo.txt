@@ -1,2 +1,3 @@
-- return all colliding tiles
 - proper velocity handling
+- Walk
+- jump
