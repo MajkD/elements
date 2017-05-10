@@ -6,3 +6,20 @@
 - Package game mac and windows
 - Make all tweakables read from file
 - Show verson in game from git
+
+
+//------- CLEANUP
+
+this.collidedTiles[index].debugMark();
+this.resetTileStates(this.collidedTiles);
+if(this.collidedArea) {
+    utils.renderSquare(this.collidedArea.pointA, this.collidedArea.pointB);
+  }
+
+this.setDebugStates();
+this.resetDebugStates();
+
+
+//------ BUGS
+
+- It's possible to double jump

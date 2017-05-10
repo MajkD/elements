@@ -11,7 +11,7 @@ Grid = function() {
 }
 
 Grid.prototype.makeAHoleInTheWorld = function(x, y) {
-  var offset = 4;
+  var offset = 3;
   if(x >= offset && y >= offset && (x < this.numTilesX - offset) && (y < this.numTilesY - offset)) {
     return false;
   }

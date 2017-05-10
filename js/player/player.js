@@ -1,5 +1,8 @@
 require('../utils/vector.js')
 
+var MS_Air = 0;
+var MS_Walk = 1;
+
 Player = function() {
   this.startPos = new Vector(0, 0);
   this.pos = new Vector(0, 0);
@@ -10,20 +13,18 @@ Player = function() {
   this.dimensions = { "width": img.width, "height": img.height };
 
   this.collisionOffset = 16;
-  // this.slowDo2n
+  this.collisionSideOffset = 8;
+  this.movementState = MS_Air;
 
-  this.walking = false;
-  this.gravity = 0.3;
-  this.jumpForce = 3;
-
-  // this.isWalking = true;
   this.walkingDir = 0;
   this.leftPressed = false;
   this.rightPressed = false;
-
-
-
-  //--------
+  this.collidedTiles = [];
+  
+  // Jumping
+  this.gravity = 0.3;
+  this.jumpForce = 3;
+  // Walking
   this.walkingSpeed = 0.3;
   this.walkingFriction = 0.07; //Slow down walking
   this.maxMovementVelocity = 0.5;
@@ -37,13 +38,26 @@ Player.prototype.setStartPos = function(x, y) {
 }
 
 Player.prototype.getCollidingFeetArea = function() {
-  pointA = { x: this.pos.x, y: this.pos.y + this.dimensions.height - this.collisionOffset };
-  pointB = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height + this.collisionOffset};
+  pointA = { x: this.pos.x + this.collisionSideOffset, y: this.pos.y + this.dimensions.height - this.collisionOffset };
+  pointB = { x: this.pos.x + this.dimensions.width - this.collisionSideOffset, y: this.pos.y + this.dimensions.height + this.collisionOffset };
   return { pointA: pointA, pointB: pointB };
 }
 
+Player.prototype.getCollidingFrontArea = function(dir = undefined) {
+  var direction = (dir == undefined) ? this.walkingDir : dir;
+  if(this.walkingDir == -1) {
+    pointA = { x: this.pos.x, y: this.pos.y + this.collisionSideOffset };
+    pointB = { x: this.pos.x + this.collisionOffset, y: this.pos.y + this.dimensions.height - this.collisionSideOffset };
+  }
+  if(this.walkingDir == 1) {
+    pointA = { x: this.pos.x + this.dimensions.width - this.collisionOffset, y: this.pos.y + this.collisionSideOffset };
+    pointB = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height - this.collisionSideOffset };
+  }
+  return { pointA: pointA, pointB: pointB }; 
+}
+
 Player.prototype.onGroundCollision = function(collidedTiles) {
-  this.walking = true;
+  this.movementState = MS_Walk;
   this.velocity.y = 0;
   var smallestY = Number.MAX_SAFE_INTEGER;
   var numCollidedTiles = collidedTiles.length
@@ -55,30 +69,79 @@ Player.prototype.onGroundCollision = function(collidedTiles) {
   this.pos.y = smallestY - this.dimensions.height;
 }
 
+Player.prototype.onWalkCollision = function(collidedTiles) {
+  this.collidedTiles = collidedTiles;
+  this.velocity.x = 0;
+  this.walkingDir = 0;
+  this.leftPressed = false;
+  this.rightPressed = false;
+  // var smallestY = Number.MAX_SAFE_INTEGER;
+  // var numCollidedTiles = collidedTiles.length
+  // for(var index = 0; index < numCollidedTiles; index++) {
+  //   if(collidedTiles[index].pos.y < smallestY) {
+  //     smallestY = collidedTiles[index].pos.y;
+  //   }
+  // }
+}
+
 Player.prototype.update = function(delta) {
-  if(!this.walking) {
+  if(this.movementState == MS_Air) {
     this.velocity.y += this.gravity;
   }
   this.updateMovementVelocity();
   this.updatePos(delta);
 }
 
-Player.prototype.findWalkingDir = function() {
+Player.prototype.setWalkingDir = function() {
   if(this.leftPressed) {
     if(this.rightPressed) {
       this.walkingDir = 0;
     } else {
-      this.walkingDir = -1;
+      if (this.allowedMoveInDirection(-1)) {
+        this.walkingDir = -1;
+      }
     }
   } else if(this.rightPressed) {
-    this.walkingDir = 1;
+    if (this.allowedMoveInDirection(1)) {
+      this.walkingDir = 1;
+    }
   } else {
     this.walkingDir = 0;
   }
 }
 
+Player.prototype.allowedMoveInDirection = function(dir) {
+  if(dir == -1) {
+    var biggestX = -Number.MAX_SAFE_INTEGER;
+    var numCollidedTiles = this.collidedTiles.length
+    for(var index = 0; index < numCollidedTiles; index++) {
+      var x = this.collidedTiles[index].pos.x + this.collidedTiles[index].width;
+      if(x > biggestX) {
+        biggestX = x;
+      }
+    }
+    if(this.pos.x > biggestX) {
+      return true;
+    }
+  }
+  if(dir == 1) {
+    var smallestX = Number.MAX_SAFE_INTEGER;
+    var numCollidedTiles = this.collidedTiles.length
+    for(var index = 0; index < numCollidedTiles; index++) {
+      var x = this.collidedTiles[index].pos.x;
+      if(x < smallestX) {
+        smallestX = x;
+      }
+    }
+    if(this.pos.x + this.dimensions.width < smallestX) {
+      return true;
+    }
+  }
+  return false;
+}
+
 Player.prototype.updateMovementVelocity = function() {
-  this.findWalkingDir();
+  this.setWalkingDir();
   if(this.walkingDir != 0) {
     var newVelocity = this.velocity.x + (this.walkingSpeed * this.walkingDir);
     this.velocity.x = utils.clamp(newVelocity, -this.maxMovementVelocity, this.maxMovementVelocity);
@@ -103,6 +166,10 @@ Player.prototype.slowDownMovement = function() {
   }
 }
 
+Player.prototype.isWalking = function() {
+  return this.walkingDir != 0;
+}
+
 Player.prototype.isFalling = function() {
   return this.velocity.y > 0;
 }
@@ -114,7 +181,7 @@ Player.prototype.isJumping = function() {
 Player.prototype.onSpacePressed = function() {
   if(!this.isFalling()) {
     this.velocity.y -= this.jumpForce;
-    this.walking = false;
+    this.movementState = MS_Air;
   }
 }
 

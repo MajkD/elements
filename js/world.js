@@ -3,7 +3,9 @@ require('./grid/grid.js')
 World = function() {
   this.startPos = { x: 300, y: 300 };
   this.collidedTiles = [];
-  this.collidedArea = undefined;
+  this.lastCollidedTiles = [];
+  this.collisionArea = undefined;
+  this.lastCollidedArea = undefined;
 }
 
 World.prototype.init = function(player) {
@@ -11,10 +13,21 @@ World.prototype.init = function(player) {
   player.setStartPos(this.startPos.x, this.startPos.y);
 }
 
-World.prototype.resetTileStates = function(tiles) {
-  var length = tiles.length;
+World.prototype.resetDebugStates = function() {
+  this.lastCollidedArea = undefined;
+  var length = this.lastCollidedTiles.length;
   for(var index = 0; index < length; index++) {
-    tiles[index].debugUnmark();
+    this.lastCollidedTiles[index].debugUnmark();
+  }
+}
+
+World.prototype.setDebugStates = function() {
+  this.resetDebugStates();
+  this.lastCollidedArea = this.collisionArea;
+  this.lastCollidedTiles = this.collidedTiles;
+  var length = this.collidedTiles.length;
+  for(var index = 0; index < length; index++) {
+    this.collidedTiles[index].debugMark();
   }
 }
 
@@ -24,15 +37,21 @@ World.prototype.update = function(delta, player) {
 
 World.prototype.updatePlayerCollision = function(player) {
   if(player.isFalling()) {
-    this.resetTileStates(this.collidedTiles);
-    this.collidedArea = player.getCollidingFeetArea();
-    this.collidedTiles = this.grid.collide(this.collidedArea);
+    this.collisionArea = player.getCollidingFeetArea();
+    this.collidedTiles = this.grid.collide(this.collisionArea);
     var length = this.collidedTiles.length;
     if(length > 0) {
       player.onGroundCollision(this.collidedTiles);
-      for(var index = 0; index < length; index++) {
-        this.collidedTiles[index].debugMark();
-      }
+      this.setDebugStates();
+    }
+  }
+  if(player.isWalking()) {
+    this.collisionArea = player.getCollidingFrontArea();
+    this.collidedTiles = this.grid.collide(this.collisionArea);
+    var length = this.collidedTiles.length;
+    if(length > 0) {
+      player.onWalkCollision(this.collidedTiles);
+      this.setDebugStates();
     }
   }
 }
@@ -40,8 +59,11 @@ World.prototype.updatePlayerCollision = function(player) {
 World.prototype.render = function() {
   this.grid.render();
 
-  if(this.collidedArea) {
-    utils.renderSquare(this.collidedArea.pointA, this.collidedArea.pointB);
+  if(this.lastCollidedArea) {
+    utils.renderSquare(this.lastCollidedArea.pointA, this.lastCollidedArea.pointB, "blue");
+  }
+  if(this.collisionArea) {
+    utils.renderSquare(this.collisionArea.pointA, this.collisionArea.pointB, "red"); 
   }
 }
 
