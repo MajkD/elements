@@ -1,41 +1,37 @@
 require('./grid/grid.js')
-require('./player/player.js')
 
 World = function() {
   this.startPos = { x: 300, y: 300 };
-  this.init();
+  this.collidedTiles = [];
+  this.collidedArea = undefined;
 }
 
-World.prototype.init = function() {
+World.prototype.init = function(player) {
   this.grid = new Grid();
-  this.player = new Player(this.startPos.x, this.startPos.y);
+  player.setStartPos(this.startPos.x, this.startPos.y);
 }
 
-World.prototype.resetPlayer = function() {
-  log("reset player - TEMP");
-  this.player.pos.x = this.player.startPos.x;
-  this.player.pos.y = this.player.startPos.y - this.player.dimensions.height;
-  this.player.falling = true;
-  var length = this.grid.tiles.length;
+World.prototype.resetTileStates = function(tiles) {
+  var length = tiles.length;
   for(var index = 0; index < length; index++) {
-    this.grid.tiles[index].debugUnmark();
+    tiles[index].debugUnmark();
   }
 }
 
-World.prototype.update = function(delta) {
-  this.player.update(delta);
-  this.updatePlayerCollision();
+World.prototype.update = function(delta, player) {
+  this.updatePlayerCollision(player);
 }
 
-World.prototype.updatePlayerCollision = function() {
-  if(this.player.falling) {
-    var collidingArea = this.player.getCollidingFeetArea();
-    var collidedTiles = this.grid.collide(collidingArea);
-    if(collidedTiles.length > 0) {
-      this.player.onGroundCollision(collidedTiles);
-      var length = collidedTiles.length;
+World.prototype.updatePlayerCollision = function(player) {
+  if(player.isFalling()) {
+    this.resetTileStates(this.collidedTiles);
+    this.collidedArea = player.getCollidingFeetArea();
+    this.collidedTiles = this.grid.collide(this.collidedArea);
+    var length = this.collidedTiles.length;
+    if(length > 0) {
+      player.onGroundCollision(this.collidedTiles);
       for(var index = 0; index < length; index++) {
-        collidedTiles[index].debugMark();
+        this.collidedTiles[index].debugMark();
       }
     }
   }
@@ -43,7 +39,10 @@ World.prototype.updatePlayerCollision = function() {
 
 World.prototype.render = function() {
   this.grid.render();
-  this.player.render();
+
+  if(this.collidedArea) {
+    utils.renderSquare(this.collidedArea.pointA, this.collidedArea.pointB);
+  }
 }
 
 module.exports = World;

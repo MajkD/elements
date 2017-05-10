@@ -1,3 +1,8 @@
-- proper velocity handling
-- Walk
-- jump
+- WAll collision...
+- Walk - collision walls
+- jump - collision roof "Animation"
+
+- Basic level "editor", click with mouse add and remove tiles
+- Package game mac and windows
+- Make all tweakables read from file
+- Show verson in game from git

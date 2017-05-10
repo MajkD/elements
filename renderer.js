@@ -16,16 +16,26 @@ require('./js/canvas.js')
 require('./js/elements.js')
 require('./js/utils/imageLoader.js')
 require('./js/utils/logger.js')
+require('./js/utils/utils.js')
 
 canvas = new Canvas();
 canvas.init();
 
 imageLoader = new ImageLoader();
 screenLogger = new ScreenLogger();
+utils = new Utils();
 elements = new Elements(logger);
 
 function handleMouseClicked(event) {
   elements.mouseClicked();
+}
+
+function handleKeyUp(event) {
+  elements.keyUp(event.keyCode);
+}
+
+function handleKeyDown(event) {
+  elements.keyDown(event.keyCode);
 }
 
 var fpsTimer = 0;
@@ -55,6 +65,8 @@ function render() {
 }
 
 document.onclick = handleMouseClicked;
+document.onkeyup = handleKeyUp;
+document.onkeydown = handleKeyDown;
 
 imageLoader.loadImages(imagesLoaded);
 function imagesLoaded() {
