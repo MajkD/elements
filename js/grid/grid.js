@@ -1,27 +1,20 @@
 require('./tile.js')
 
-Grid = function() {
-  this.tileWidth = 32;
-  this.tileHeight = 32;
-  this.numTilesX = 30;
-  this.numTilesY = 20;
+Grid = function(worldData) {
+  this.tileWidth = worldData.tileWidth;
+  this.tileHeight = worldData.tileHeight;
+  this.numTilesX = worldData.gridWidth;
+  this.numTilesY = worldData.gridHeight;
+  this.loadedGrid = worldData.grid;
   this.grid = [];
   this.tiles = [];
   this.initGrid();
 }
 
-Grid.prototype.makeAHoleInTheWorld = function(x, y) {
-  var offset = 3;
-  if(x >= offset && y >= offset && (x < this.numTilesX - offset) && (y < this.numTilesY - offset)) {
-    return false;
-  }
-  return true;
-}
-
 Grid.prototype.initGrid = function() {
   for(var x = 0; x < this.numTilesX; x++) {
     for(var y = 0; y < this.numTilesY; y++) {
-      if(this.makeAHoleInTheWorld(x, y)) {
+      if(this.loadedGrid[y][x] == 1) {
         var xPos = x * this.tileWidth;
         var yPos = y * this.tileHeight;
         var index = (x * this.numTilesX) + y;

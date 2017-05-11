@@ -6,10 +6,21 @@ Elements = function(logger) {
   log = logger;
 }
 
-Elements.prototype.init = function() {
-  this.world = new World();
+Elements.prototype.init = function(onInitFinished) {
+  this.onInitCallback = onInitFinished;
+  var fileReader = require('jsonfile');
+  var _this = this;
+  fileReader.readFile("./data/world.json", function(err, worldData) {
+    if (err) throw err;
+    _this.worldDataLoaded(worldData);
+  });
+}
+
+Elements.prototype.worldDataLoaded = function(worldData) {
+  this.world = new World(worldData);
   this.player = new Player();
   this.world.init(this.player);
+  this.onInitCallback();
 }
 
 Elements.prototype.update = function(delta) {
@@ -32,6 +43,9 @@ Elements.prototype.keyDown = function(keyCode) {
   if(keyCode == 39) {
     this.player.onRightDown();
   }
+  if(keyCode == 32) {
+    this.player.onSpacePressed();
+  }
 }
 
 Elements.prototype.keyUp = function(keyCode) {
@@ -40,9 +54,6 @@ Elements.prototype.keyUp = function(keyCode) {
   }
   if(keyCode == 39) {
     this.player.onRightUp();
-  }
-  if(keyCode == 32) {
-    this.player.onSpacePressed();
   }
 }
 

@@ -22,12 +22,12 @@ Player = function() {
   this.collidedTiles = [];
   
   // Jumping
-  this.gravity = 0.3;
-  this.jumpForce = 3;
+  this.gravity = 98.0;
+  this.jumpForce = 1500;
   // Walking
-  this.walkingSpeed = 0.3;
-  this.walkingFriction = 0.07; //Slow down walking
-  this.maxMovementVelocity = 0.5;
+  this.walkingAcceleration = 10000;
+  this.walkingFriction = 150; //Slow down walking
+  this.maxMovementVelocity = 500;
 }
 
 Player.prototype.setStartPos = function(x, y) {
@@ -47,13 +47,12 @@ Player.prototype.getCollidingFeetArea = function() {
   return { pointA: pointA, pointB: pointB };
 }
 
-Player.prototype.getCollidingFrontArea = function(dir = undefined) {
-  var direction = (dir == undefined) ? this.walkingDir : dir;
-  if(this.walkingDir == -1) {
+Player.prototype.getCollidingFrontArea = function() {
+  if(this.velocity.x < 0) {
     pointA = { x: this.pos.x, y: this.pos.y + this.collisionSideOffset };
     pointB = { x: this.pos.x + this.collisionOffset, y: this.pos.y + this.dimensions.height - this.collisionSideOffset };
   }
-  if(this.walkingDir == 1) {
+  if(this.velocity.x > 0) {
     pointA = { x: this.pos.x + this.dimensions.width - this.collisionOffset, y: this.pos.y + this.collisionSideOffset };
     pointB = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height - this.collisionSideOffset };
   }
@@ -74,16 +73,13 @@ Player.prototype.onGroundCollision = function(collidedTiles) {
 }
 
 Player.prototype.onWalkCollision = function(collidedTiles) {
-  var prevWalkingDir = this.walkingDir;
+  var prevVelocity = this.velocity.x;
   this.collidedTiles = collidedTiles;
   this.velocity.x = 0;
   this.walkingDir = 0;
-  this.leftPressed = false;
-  this.rightPressed = false;
-
-  if(prevWalkingDir == -1) {
+  if(prevVelocity < 0) {
     this.pos.x = this.getRightmostCollidedPoint();
-  } else if (prevWalkingDir == 1) {
+  } else if (prevVelocity > 0) {
     this.pos.x = this.getLeftmostCollidedPoint() - this.dimensions.width;
   }
 }
@@ -92,8 +88,23 @@ Player.prototype.update = function(delta) {
   if(this.movementState == MS_Air) {
     this.velocity.y += this.gravity;
   }
-  this.updateMovementVelocity();
+  this.updateMovementVelocity(delta);
   this.updatePos(delta)
+
+  // log(delta)
+  // if(this.velocity.x != 0) {
+  //   if(this.lastPos) {
+  //     var diff = this.pos.x - this.lastPos;
+  //     if(diff < 7.5 && diff > -7.5) {
+  //       log("---------")
+  //       log(diff)
+  //     }
+  //   }
+  // }
+  // this.lastPos = this.pos.x;
+  // if(this.velocity.x != 0) {
+  //   log(this.pos.x);
+  // }
 }
 
 Player.prototype.setWalkingDir = function() {
@@ -147,7 +158,6 @@ Player.prototype.allowedMoveInDirection = function(dir) {
   if(this.collidedTiles.length == 0) {
     return true;
   }
-  log("remove collided tiles")
   if(dir == -1) {
     if(this.pos.x >= this.getRightmostCollidedPoint()) {
       return true;
@@ -162,10 +172,10 @@ Player.prototype.allowedMoveInDirection = function(dir) {
   return false;
 }
 
-Player.prototype.updateMovementVelocity = function() {
+Player.prototype.updateMovementVelocity = function(delta) {
   this.setWalkingDir();
   if(this.walkingDir != 0) {
-    var newVelocity = this.velocity.x + (this.walkingSpeed * this.walkingDir);
+    var newVelocity = this.velocity.x + (delta * this.walkingAcceleration * this.walkingDir);
     this.velocity.x = utils.clamp(newVelocity, -this.maxMovementVelocity, this.maxMovementVelocity);
   } else {
     this.slowDownMovement();
@@ -189,7 +199,7 @@ Player.prototype.slowDownMovement = function() {
 }
 
 Player.prototype.isWalking = function() {
-  return this.walkingDir != 0;
+  return this.velocity.x != 0;
 }
 
 Player.prototype.isFalling = function() {
@@ -201,7 +211,7 @@ Player.prototype.isJumping = function() {
 }
 
 Player.prototype.onSpacePressed = function() {
-  if(!this.isFalling()) {
+  if(this.movementState == MS_Walk) {
     this.velocity.y -= this.jumpForce;
     this.movementState = MS_Air;
   }
@@ -229,11 +239,17 @@ Player.prototype.updatePos = function(delta) {
 }
 
 Player.prototype.render = function() {
-  var img = imageLoader.getImage("player");
-  if(this.isJumping()) {
-    img = imageLoader.getImage("player_jump");
+  if(debugMode) {
+    var a = { x: this.pos.x, y: this.pos.y };
+    var b = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height };
+    utils.renderSquare(a, b, "white");
+  } else {
+    var img = imageLoader.getImage("player");
+    if(this.isJumping()) {
+      img = imageLoader.getImage("player_jump");
+    }
+    canvas.context.drawImage(img, this.pos.x, this.pos.y, img.width, img.height);
   }
-  canvas.context.drawImage(img, this.pos.x, this.pos.y, img.width, img.height);
 }
 
 module.exports = Player;

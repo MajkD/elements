@@ -1,7 +1,4 @@
-- Player can get stuck if jumping and colliding with wall in air
-- Remove collided tiles list in player (for performance reasons)
 - jump - collision roof "Animation"
-
 - Basic level "editor", click with mouse add and remove tiles
 - Package game mac and windows
 - Make all tweakables read from file
@@ -22,5 +19,9 @@ this.resetDebugStates();
 
 //------ BUGS
 
-- It's possible to double jump
 - Player "jumps/twitches" when walking
+
+//------ BUGS (No longer reproducable)
+
+- Can get stuck when spamming left and right and jumping
+- Player can get stuck if jumping and colliding with wall in air
