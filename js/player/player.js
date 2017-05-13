@@ -41,6 +41,12 @@ Player.prototype.getMiddlePoint = function() {
   return { x: this.pos.x + (this.dimensions.width * 0.5), y: this.pos.y + (this.dimensions.height * 0.5) }
 }
 
+Player.prototype.getCollidingHeadArea = function() {
+  pointA = { x: this.pos.x + this.collisionSideOffset, y: this.pos.y - this.collisionOffset };
+  pointB = { x: this.pos.x + this.dimensions.width - this.collisionSideOffset, y: this.pos.y + this.collisionOffset };
+  return { pointA: pointA, pointB: pointB };
+}
+
 Player.prototype.getCollidingFeetArea = function() {
   pointA = { x: this.pos.x + this.collisionSideOffset, y: this.pos.y + this.dimensions.height - this.collisionOffset };
   pointB = { x: this.pos.x + this.dimensions.width - this.collisionSideOffset, y: this.pos.y + this.dimensions.height + this.collisionOffset };
@@ -57,6 +63,21 @@ Player.prototype.getCollidingFrontArea = function() {
     pointB = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height - this.collisionSideOffset };
   }
   return { pointA: pointA, pointB: pointB }; 
+}
+
+Player.prototype.onRoofCollision = function(collidedTiles) {
+  if(this.velocity.y < 0){
+    this.velocity.y = 0;
+  }
+  var biggestY = -Number.MAX_SAFE_INTEGER;
+  var numCollidedTiles = collidedTiles.length
+  for(var index = 0; index < numCollidedTiles; index++) {
+    var tile = collidedTiles[index];
+    if(tile.pos.y + tile.height > biggestY) {
+      biggestY = tile.pos.y + tile.height;
+    }
+  }
+  this.pos.y = biggestY;
 }
 
 Player.prototype.onGroundCollision = function(collidedTiles) {
@@ -90,21 +111,6 @@ Player.prototype.update = function(delta) {
   }
   this.updateMovementVelocity(delta);
   this.updatePos(delta)
-
-  // log(delta)
-  // if(this.velocity.x != 0) {
-  //   if(this.lastPos) {
-  //     var diff = this.pos.x - this.lastPos;
-  //     if(diff < 7.5 && diff > -7.5) {
-  //       log("---------")
-  //       log(diff)
-  //     }
-  //   }
-  // }
-  // this.lastPos = this.pos.x;
-  // if(this.velocity.x != 0) {
-  //   log(this.pos.x);
-  // }
 }
 
 Player.prototype.setWalkingDir = function() {
@@ -243,6 +249,12 @@ Player.prototype.render = function() {
     var a = { x: this.pos.x, y: this.pos.y };
     var b = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height };
     utils.renderSquare(a, b, "white");
+    // for(var index = 0; index < this.collidedTiles.length; index++) {
+    //   var tile = this.collidedTiles[index];
+    //   var pointA = { x: tile.x, y: tile.y };
+    //   var pointB = { x: tile.x + tile.width, y: tile.y + tile.height };
+    //   utils.renderSquare(pointA, pointB, "yellow");
+    // }
   } else {
     var img = imageLoader.getImage("player");
     if(this.isJumping()) {

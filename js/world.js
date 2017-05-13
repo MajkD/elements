@@ -67,6 +67,23 @@ World.prototype.updatePlayerCollision = function(player) {
       this.debugCollisionAreas.push(collisionArea);
     }
   }
+  if(player.isJumping()) {
+    var collisionArea = player.getCollidingHeadArea();
+    var collidedTiles = this.grid.collide(collisionArea);
+    var length = collidedTiles.length;
+    if(length > 0) {
+      player.onRoofCollision(collidedTiles);
+      if(debugMode) {
+        this.resetDebugTileStates();
+        this.debugCollidedTiles = collidedTiles;
+        this.setDebugTileStates();
+        this.debugCollidedArea = collisionArea;
+      }
+    }
+    if(debugMode) {
+      this.debugCollisionAreas.push(collisionArea);
+    }
+  }
 }
 
 World.prototype.render = function() {
