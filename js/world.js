@@ -7,7 +7,13 @@ World = function(worldData) {
 
 World.prototype.init = function(player) {
   this.grid = new Grid(this.worldData);
-  player.setStartPos(this.startPos.x, this.startPos.y);
+  if(player) {
+    player.setStartPos(this.startPos.x, this.startPos.y);
+  }
+}
+
+World.prototype.mouseClicked = function(pos) {
+  this.grid.clickTile(pos);
 }
 
 World.prototype.update = function(delta, player) {

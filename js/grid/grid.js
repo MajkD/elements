@@ -53,6 +53,32 @@ Grid.prototype.collide = function(collidingArea) {
   return collidingTiles;
 }
 
+Grid.prototype.removeTileCyclic = function(index) {
+  var lastTile = this.tiles[this.tiles.length-1];
+  var x = parseInt(lastTile.pos.x / this.tileWidth);
+  var y = parseInt(lastTile.pos.y / this.tileHeight);
+  var lastTileGridIndex = (x * this.numTilesX) + y;
+  this.grid[lastTileGridIndex] = this.grid[index];
+  this.tiles[this.grid[index]] = this.tiles[this.tiles.length-1];
+  this.tiles.pop();
+  this.grid[index] = undefined;
+}
+
+Grid.prototype.clickTile = function(pos) {
+  var x = parseInt(pos.x / this.tileWidth);
+  var y = parseInt(pos.y / this.tileHeight);
+  var index = (x * this.numTilesX) + y;
+  if(this.grid[index]) {
+    this.removeTileCyclic(index);
+  } else {
+    var tilePos = { x: x * this.tileWidth, y: y * this.tileHeight }
+    var tile = new Tile(this.tileWidth, this.tileHeight, tilePos);
+    this.tiles.push(tile);
+    var index = (x * this.numTilesX) + y;
+    this.grid[index] = this.tiles.length - 1;
+  }
+}
+
 Grid.prototype.render = function() {
   var length = this.tiles.length;
   for(var index = 0; index < length; index++) {

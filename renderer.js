@@ -3,6 +3,8 @@
 // All of the Node.js APIs are available in this process.
 
 var ipc = require('electron').ipcRenderer;
+var electron = require('electron');
+
 window.onerror = function(error, url, line) {
     ipc.send('errorInWindow', error);
     ipc.send('errorInWindow', "In: " + url + ": " + line);
@@ -68,9 +70,12 @@ function render() {
   screenLogger.render();
 }
 
+var args = electron.remote.getCurrentWindow().mainArgs;
+var isEditor = args == "editor" ? true : false;
+
 imageLoader.loadImages(imagesLoaded);
 function imagesLoaded() {
-  elements.init(elementsInitialized);
+  elements.init(elementsInitialized, isEditor);
 }
 
 function elementsInitialized() {
