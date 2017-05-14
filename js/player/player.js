@@ -19,7 +19,6 @@ Player = function() {
   this.walkingDir = 0;
   this.leftPressed = false;
   this.rightPressed = false;
-  this.collidedTiles = [];
   
   // Jumping
   this.gravity = 98.0;
@@ -95,13 +94,12 @@ Player.prototype.onGroundCollision = function(collidedTiles) {
 
 Player.prototype.onWalkCollision = function(collidedTiles) {
   var prevVelocity = this.velocity.x;
-  this.collidedTiles = collidedTiles;
   this.velocity.x = 0;
   this.walkingDir = 0;
   if(prevVelocity < 0) {
-    this.pos.x = this.getRightmostCollidedPoint();
+    this.pos.x = this.getRightmostCollidedPoint(collidedTiles);
   } else if (prevVelocity > 0) {
-    this.pos.x = this.getLeftmostCollidedPoint() - this.dimensions.width;
+    this.pos.x = this.getLeftmostCollidedPoint(collidedTiles) - this.dimensions.width;
   }
 }
 
@@ -118,24 +116,20 @@ Player.prototype.setWalkingDir = function() {
     if(this.rightPressed) {
       this.walkingDir = 0;
     } else {
-      if (this.allowedMoveInDirection(-1)) {
-        this.walkingDir = -1;
-      }
+      this.walkingDir = -1;
     }
   } else if(this.rightPressed) {
-    if (this.allowedMoveInDirection(1)) {
-      this.walkingDir = 1;
-    }
+    this.walkingDir = 1;
   } else {
     this.walkingDir = 0;
   }
 }
 
-Player.prototype.getRightmostCollidedPoint = function() {
+Player.prototype.getRightmostCollidedPoint = function(collidedTiles) {
   var biggestX = -Number.MAX_SAFE_INTEGER;
-  var numCollidedTiles = this.collidedTiles.length
+  var numCollidedTiles = collidedTiles.length
   for(var index = 0; index < numCollidedTiles; index++) {
-    var tile = this.collidedTiles[index];
+    var tile = collidedTiles[index];
     if(tile.getMiddlePoint().x < this.getMiddlePoint().x) { //Only care if tile is to the left of player
       var x = tile.pos.x + tile.width;
       if(x > biggestX) {
@@ -146,11 +140,11 @@ Player.prototype.getRightmostCollidedPoint = function() {
   return biggestX;
 }
 
-Player.prototype.getLeftmostCollidedPoint = function() {
+Player.prototype.getLeftmostCollidedPoint = function(collidedTiles) {
   var smallestX = Number.MAX_SAFE_INTEGER;
-  var numCollidedTiles = this.collidedTiles.length
+  var numCollidedTiles = collidedTiles.length
   for(var index = 0; index < numCollidedTiles; index++) {
-    var tile = this.collidedTiles[index];
+    var tile = collidedTiles[index];
     if(tile.getMiddlePoint().x > this.getMiddlePoint().x) { //Only care if tile is to the right of player
       if(tile.pos.x < smallestX) {
         smallestX = tile.pos.x;
@@ -158,24 +152,6 @@ Player.prototype.getLeftmostCollidedPoint = function() {
     }
   }
   return smallestX;
-}
-
-Player.prototype.allowedMoveInDirection = function(dir) {
-  if(this.collidedTiles.length == 0) {
-    return true;
-  }
-  if(dir == -1) {
-    if(this.pos.x >= this.getRightmostCollidedPoint()) {
-      return true;
-    }
-  }
-  if(dir == 1) {
-    var foobar = this.pos.x + this.dimensions.width;
-    if(this.pos.x + this.dimensions.width <= this.getLeftmostCollidedPoint()) {
-      return true;
-    }
-  }
-  return false;
 }
 
 Player.prototype.updateMovementVelocity = function(delta) {
@@ -249,12 +225,6 @@ Player.prototype.render = function() {
     var a = { x: this.pos.x, y: this.pos.y };
     var b = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height };
     utils.renderSquare(a, b, "white");
-    // for(var index = 0; index < this.collidedTiles.length; index++) {
-    //   var tile = this.collidedTiles[index];
-    //   var pointA = { x: tile.x, y: tile.y };
-    //   var pointB = { x: tile.x + tile.width, y: tile.y + tile.height };
-    //   utils.renderSquare(pointA, pointB, "yellow");
-    // }
   } else {
     var img = imageLoader.getImage("player");
     if(this.isJumping()) {

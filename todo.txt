@@ -1,7 +1,13 @@
+- Can sometime sollide with something weird to the right :)
+- Should detect falling
+
 - Basic level "editor", click with mouse add and remove tiles
 - Package game mac and windows
 - Make all tweakables read from file
 - Show verson in game from git
+
+
+- More exact collision system??
 
 
 //------- CLEANUP
@@ -19,9 +25,3 @@ this.resetDebugStates();
 //------ BUGS
 
 - Player "jumps/twitches" when walking
-- Can get stuck when spamming jump and left and right nad hitting roof
-
-//------ BUGS (No longer reproducable)
-
-- Can get stuck when spamming left and right and jumping
-- Player can get stuck if jumping and colliding with wall in air
