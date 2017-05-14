@@ -5,7 +5,19 @@ ImageLoader = function() {
     "dim": { "width": 32, "height": 32 }
   },
   {
-    "name": "tile_mark",
+    "name": "tile_mark_1",
+    "dim": { "width": 32, "height": 32 }
+  },
+  {
+    "name": "tile_mark_2",
+    "dim": { "width": 32, "height": 32 }
+  },
+  {
+    "name": "tile_mark_3",
+    "dim": { "width": 32, "height": 32 }
+  },
+  {
+    "name": "tile_mark_4",
     "dim": { "width": 32, "height": 32 }
   },
   {

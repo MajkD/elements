@@ -24,8 +24,8 @@ Elements.prototype.worldDataLoaded = function(worldData) {
 }
 
 Elements.prototype.update = function(delta) {
-  this.player.update(delta);
   this.world.update(delta, this.player);
+  this.player.update(delta, this.world.grid);
 }
 
 Elements.prototype.render = function() {
