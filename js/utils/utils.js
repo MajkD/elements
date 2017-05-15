@@ -24,4 +24,18 @@ Utils.prototype.renderSquare = function(pointA, pointB, color) {
   canvas.context.stroke();
 }
 
+Utils.prototype.setWindowTitle = function(newTitle) {
+  var title = document.getElementById('title');
+  title.text = newTitle;
+}
+
+Utils.prototype.getClass = function(obj) {
+  if (typeof obj === "undefined")
+    return "undefined";
+  if (obj === null)
+    return "null";
+  return Object.prototype.toString.call(obj)
+    .match(/^\[object\s(.*)\]$/)[1];
+}
+
 module.exports = Utils;

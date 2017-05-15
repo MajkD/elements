@@ -1,30 +1,19 @@
 
 - Basic level "editor", click with mouse add and remove tiles
-  - Save map
+  - Save map left!!
+
 - Package game mac and windows
 - Make all tweakables read from file
 - Show verson in game from git
 
-
 - More exact collision system??
-
-
-//------- CLEANUP
-
-this.collidedTiles[index].debugMark();
-this.resetTileStates(this.collidedTiles);
-if(this.collidedArea) {
-    utils.renderSquare(this.collidedArea.pointA, this.collidedArea.pointB);
-  }
-
-this.setDebugStates();
-this.resetDebugStates();
 
 
 //------ BUGS
 
 - Player "jumps/twitches" when walking
+- Space key event does not trigger when both left and right are pressed
 
 //------ BUGS No longer reproducable
 
-- Collision flips out sometimes upon roof collision
+- Collision flips sometimes upon roof collision

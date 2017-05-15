@@ -20,6 +20,9 @@ require('./js/utils/imageLoader.js')
 require('./js/utils/logger.js')
 require('./js/utils/utils.js')
 
+inputDialog = document.createElement('input');
+inputDialog.type = 'file';
+
 canvas = new Canvas();
 canvas.init();
 
@@ -70,12 +73,16 @@ function render() {
   screenLogger.render();
 }
 
+isEditor = false;
 var args = electron.remote.getCurrentWindow().mainArgs;
-var isEditor = args == "editor" ? true : false;
+if(args == "editor") {
+  utils.setWindowTitle("Elements (editor)");
+  isEditor = true;
+}
 
 imageLoader.loadImages(imagesLoaded);
 function imagesLoaded() {
-  elements.init(elementsInitialized, isEditor);
+  elements.init(elementsInitialized);
 }
 
 function elementsInitialized() {
