@@ -1,6 +1,7 @@
 require('./grid/grid.js')
 
 World = function() {
+  this.loadedLevelPath = undefined;
 }
 
 World.prototype.initPlayer = function(player) {
@@ -14,7 +15,8 @@ World.prototype.loadLevel = function(path, callback = undefined) {
     if (err) throw err;
     _this.worldData = worldData;
     _this.grid = new Grid(_this.worldData);
-    _this.updateWindowTitle(path);
+    _this.loadedLevelPath = path;
+    _this.updateWindowTitle(path.split("/").pop());
     if(callback) {
       callback();
     }
@@ -33,8 +35,34 @@ World.prototype.mouseClicked = function(pos) {
   }
 }
 
+World.prototype.generateMapName = function() {
+  var path = this.loadedLevelPath.split(".")
+  path[0] += Date.now();
+  return path.join(".");
+}
+
+World.prototype.gatherWorldData = function() {
+  return {
+    "startPos": { "x": 300, "y": 300 },
+    "tileWidth": 32,
+    "tileHeight": 32,
+    "gridWidth": 30,
+    "gridHeight": 20,
+    "grid": this.grid.getSaveData()
+  }
+}
+
 World.prototype.saveMap = function() {
-  log("save map")
+  if(this.loadedLevelPath) {
+    var savePath = this.generateMapName(this.loadedLevelPath)
+    var fs = require('fs');
+    data = this.gatherWorldData();
+    var string = JSON.stringify(data, null, '\t');
+    fs.writeFile(savePath, string, function(err) {
+      if(err) throw err;
+      log("map saved");
+    })
+  }
 }
 
 World.prototype.loadMap = function() {
@@ -44,7 +72,9 @@ World.prototype.loadMap = function() {
 
 World.prototype.mapSelected = function() {
   var file = inputDialog.files[0];
-  this.loadLevel(file.path);
+  if(file && file.path) {
+    this.loadLevel(file.path);
+  }
 }
 
 World.prototype.update = function(delta, player) {

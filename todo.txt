@@ -1,7 +1,3 @@
-
-- Basic level "editor", click with mouse add and remove tiles
-  - Save map left!!
-
 - Package game mac and windows
 - Make all tweakables read from file
 - Show verson in game from git
@@ -13,6 +9,10 @@
 
 - Player "jumps/twitches" when walking
 - Space key event does not trigger when both left and right are pressed
+
+// --- MINOR BUGS
+
+- File input dialog fires one event per time the dialog was opened
 
 //------ BUGS No longer reproducable
 

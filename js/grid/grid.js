@@ -11,10 +11,30 @@ Grid = function(worldData) {
   this.initGrid();
 }
 
+Grid.prototype.getSaveData = function() {
+  var saveGrid = [];
+  for(var x = 0; x < this.numTilesX; x++) {
+    saveGrid[x] = [];
+    for(var y = 0; y < this.numTilesY; y++) {
+      var index = (x * this.numTilesX) + y;
+      // log("index: " + index);
+      if(this.tiles[this.grid[index]]) {
+        saveGrid[x][y] = 1;  
+      } else {
+        // log("node tile on index: " + index);
+        saveGrid[x][y] = 0;
+      }
+      // log("------")
+    }
+  }
+  // log(saveGrid)
+  return saveGrid;
+}
+
 Grid.prototype.initGrid = function() {
   for(var x = 0; x < this.numTilesX; x++) {
     for(var y = 0; y < this.numTilesY; y++) {
-      if(this.loadedGrid[y][x] == 1) {
+      if(this.loadedGrid[x][y] == 1) {
         var xPos = x * this.tileWidth;
         var yPos = y * this.tileHeight;
         var index = (x * this.numTilesX) + y;

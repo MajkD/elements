@@ -20,9 +20,6 @@ require('./js/utils/imageLoader.js')
 require('./js/utils/logger.js')
 require('./js/utils/utils.js')
 
-inputDialog = document.createElement('input');
-inputDialog.type = 'file';
-
 canvas = new Canvas();
 canvas.init();
 
@@ -78,6 +75,11 @@ var args = electron.remote.getCurrentWindow().mainArgs;
 if(args == "editor") {
   utils.setWindowTitle("Elements (editor)");
   isEditor = true;
+  inputDialog = document.createElement('input');
+  inputDialog.type = 'file';
+  // inputSaveDialog = document.createElement('input');
+  // inputSaveDialog.type = 'file';
+  // inputSaveDialog.setAttribute("nwsaveas", "test.json");
 }
 
 imageLoader.loadImages(imagesLoaded);
