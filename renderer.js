@@ -28,8 +28,6 @@ screenLogger = new ScreenLogger();
 utils = new Utils();
 elements = new Elements(logger);
 
-debugMode = true;
-
 function handleMouseClicked(event) {
   elements.mouseClicked();
 }
@@ -70,6 +68,7 @@ function render() {
   screenLogger.render();
 }
 
+debugMode = false;
 isEditor = false;
 var args = electron.remote.getCurrentWindow().mainArgs;
 if(args == "editor") {
@@ -77,9 +76,8 @@ if(args == "editor") {
   isEditor = true;
   inputDialog = document.createElement('input');
   inputDialog.type = 'file';
-  // inputSaveDialog = document.createElement('input');
-  // inputSaveDialog.type = 'file';
-  // inputSaveDialog.setAttribute("nwsaveas", "test.json");
+} else if(args == "game-debug") {
+  debugMode = true;
 }
 
 imageLoader.loadImages(imagesLoaded);
