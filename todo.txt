@@ -2,7 +2,8 @@
 - Make all tweakables read from file
 - Show verson in game from git
 
-- More exact collision system??
+- Rewrite collision
+  - More exact collision system??
 
 
 //------ BUGS
