@@ -1,0 +1,10 @@
+{
+  "image": "player",
+  "collisionOffset": 16,
+  "collisionSideOffset": 8,
+  "gravity": 98.0,
+  "jumpForce": 1500,
+  "walkingAcceleration": 10000,
+  "walkingFriction": 150,
+  "maxMovementVelocity": 500
+}

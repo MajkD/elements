@@ -1,7 +1,7 @@
-- Make all tweakables read from file
-
 - Package game mac and windows
 - Show verson in game from git
+
+- Start map from scratch
 
 // ------ TODO
 

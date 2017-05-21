@@ -3,30 +3,30 @@ require('../utils/vector.js')
 var MS_Air = 0;
 var MS_Walk = 1;
 
-Player = function() {
+Player = function(playerData) {
   this.startPos = new Vector(0, 0);
   this.pos = new Vector(0, 0);
   this.velocity = new Vector(0, 0);
   this.acceleration = new Vector(0, 0);
 
-  var img = imageLoader.getImage("player");
-  this.dimensions = { "width": img.width, "height": img.height };
-
-  this.collisionOffset = 16;
-  this.collisionSideOffset = 8;
   this.movementState = MS_Air;
-
   this.walkingDir = 0;
   this.leftPressed = false;
   this.rightPressed = false;
-  
+
+  // Image
+  var img = imageLoader.getImage(playerData.image);
+  this.dimensions = { "width": img.width, "height": img.height };  
+  // Collision
+  this.collisionOffset = playerData.collisionOffset;
+  this.collisionSideOffset = playerData.collisionSideOffset;
   // Jumping
-  this.gravity = 98.0;
-  this.jumpForce = 1500;
+  this.gravity = playerData.gravity;
+  this.jumpForce = playerData.jumpForce;
   // Walking
-  this.walkingAcceleration = 10000;
-  this.walkingFriction = 150; //Slow down walking
-  this.maxMovementVelocity = 500;
+  this.walkingAcceleration = playerData.walkingAcceleration;
+  this.walkingFriction = playerData.walkingFriction;
+  this.maxMovementVelocity = playerData.maxMovementVelocity;
 }
 
 Player.prototype.setStartPos = function(x, y) {

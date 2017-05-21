@@ -29,7 +29,18 @@ Elements.prototype.gameDataLoaded = function(gameData) {
 }
 
 Elements.prototype.worldDataLoaded = function() {
-  this.player = new Player();
+  if(!isEditor) {
+    var _this = this;
+    var fileReader = require('jsonfile')
+    fileReader.readFile("./data/player/player.json", function(err, playerData) {
+      if (err) throw err;
+      _this.playerDataLoaded(playerData);
+    });
+  }
+}
+
+Elements.prototype.playerDataLoaded = function(playerData) {
+  this.player = new Player(playerData);
   this.world.initPlayer(this.player);
   this.onElementsInitialized();
 }
