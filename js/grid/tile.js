@@ -7,7 +7,8 @@ Tile = function(width, height, pos) {
   this.timeMarked = 0;
 }
 
-Tile.prototype.debugMark = function() {
+Tile.prototype.debugMark = function(collisionArea) {
+  this.collisionArea = collisionArea;
   this.marked = true;
   this.timeMarked = Date.now();
 }
@@ -43,6 +44,10 @@ Tile.prototype.render = function() {
         img = imageLoader.getImage("tile_mark_3");
       } else {
         img = imageLoader.getImage("tile_mark_4");
+      }
+
+      if(this.collisionArea) {
+        utils.renderFilledSquare(this.collisionArea.pointA, this.collisionArea.pointB, "blue");
       }
     }
   }

@@ -112,17 +112,17 @@ Player.prototype.update = function(delta, grid) {
   this.playerWorldCollision(grid);
 }
 
-Player.prototype.markCollidedTiles = function(collidedTiles) {
+Player.prototype.markCollidedTiles = function(collidedTiles, collisionArea) {
   var length = collidedTiles.length;
   for(var index = 0; index < length; index++) {
-    collidedTiles[index].debugMark();
+    collidedTiles[index].debugMark(collisionArea);
   }
 }
 
 Player.prototype.playerWorldCollision = function(grid) {
+  this.jumpingCollision(grid);
   this.fallingCollision(grid);
   this.walkingCollision(grid);
-  this.jumpingCollision(grid);
 }
 
 Player.prototype.fallingCollision = function(grid) {
@@ -131,7 +131,7 @@ Player.prototype.fallingCollision = function(grid) {
   var collidedTiles = grid.collide(collisionArea);
   if(collidedTiles.length > 0) {
     if(debugMode) {
-      this.markCollidedTiles(collidedTiles);
+      this.markCollidedTiles(collidedTiles, collisionArea);
     }
     this.onGroundCollision(collidedTiles);
   }
@@ -143,7 +143,7 @@ Player.prototype.walkingCollision = function(grid) {
   var collidedTiles = grid.collide(collisionArea);
   if(collidedTiles.length > 0) {
     if(debugMode) {
-      this.markCollidedTiles(collidedTiles);
+      this.markCollidedTiles(collidedTiles, collisionArea);
     }
     this.onWalkCollision(collidedTiles);
   }
@@ -161,7 +161,7 @@ Player.prototype.jumpingCollision = function(grid) {
   var collidedTiles = grid.collide(collisionArea);
   if(collidedTiles.length > 0) {
     if(debugMode) {
-      this.markCollidedTiles(collidedTiles);
+      this.markCollidedTiles(collidedTiles, collisionArea);
     }
     this.onRoofCollision(collidedTiles);
   }

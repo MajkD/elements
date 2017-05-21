@@ -1,10 +1,11 @@
-- Package game mac and windows
 - Make all tweakables read from file
+
+- Package game mac and windows
 - Show verson in game from git
 
-- Rewrite collision
-  - More exact collision system??
+// ------ TODO
 
+- Rewrite collision into more exact collision system (sprite instead of square)
 
 //------ BUGS
 
@@ -14,7 +15,3 @@
 // --- MINOR BUGS
 
 - File input dialog fires one event per time the dialog was opened
-
-//------ BUGS No longer reproducable
-
-- Collision flips sometimes upon roof collision
