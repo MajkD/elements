@@ -25,7 +25,7 @@ World.prototype.loadLevel = function(path, callback = undefined) {
 
 World.prototype.updateWindowTitle = function(path) {
   if(isEditor) {
-    utils.setWindowTitle("Elements (editor) - " + path);
+    utils.updateWindowTitle(" - " + path);
   }
 }
 

@@ -1,7 +1,3 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
-
 var ipc = require('electron').ipcRenderer;
 var electron = require('electron');
 
@@ -19,6 +15,8 @@ require('./js/elements.js')
 require('./js/utils/imageLoader.js')
 require('./js/utils/logger.js')
 require('./js/utils/utils.js')
+
+elements_version = 0.001
 
 canvas = new Canvas();
 canvas.init();
@@ -72,13 +70,14 @@ debugMode = false;
 isEditor = false;
 var args = electron.remote.getCurrentWindow().mainArgs;
 if(args == "editor") {
-  utils.setWindowTitle("Elements (editor)");
   isEditor = true;
   inputDialog = document.createElement('input');
   inputDialog.type = 'file';
 } else if(args == "game-debug") {
   debugMode = true;
 }
+
+utils.updateWindowTitle("");
 
 imageLoader.loadImages(imagesLoaded);
 function imagesLoaded() {

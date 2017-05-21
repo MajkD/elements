@@ -1,5 +1,4 @@
 - Package game mac and windows
-- Show verson in game from git
 
 // ------ TODO
 

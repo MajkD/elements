@@ -24,9 +24,13 @@ Utils.prototype.renderSquare = function(pointA, pointB, color) {
   canvas.context.stroke();
 }
 
-Utils.prototype.setWindowTitle = function(newTitle) {
+Utils.prototype.updateWindowTitle = function(newTitle) {
   var title = document.getElementById('title');
-  title.text = newTitle;
+  var titleText = "Elements v." + elements_version;
+  if(isEditor) {
+   titleText += " (editor)"
+  }
+  title.text = titleText + newTitle;
 }
 
 Utils.prototype.getClass = function(obj) {
