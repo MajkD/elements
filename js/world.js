@@ -42,13 +42,14 @@ World.prototype.generateMapName = function() {
 }
 
 World.prototype.gatherWorldData = function() {
+  var gridData = this.grid.getSaveData();
   return {
-    "startPos": { "x": 300, "y": 300 },
-    "tileWidth": 32,
-    "tileHeight": 32,
-    "gridWidth": 30,
-    "gridHeight": 20,
-    "grid": this.grid.getSaveData()
+    "startPos": { "x": this.worldData.startPos.x, "y": this.worldData.startPos.y },
+    "tileWidth": gridData.tileWidth,
+    "tileHeight": gridData.tileHeight,
+    "gridWidth": gridData.gridWidth,
+    "gridHeight": gridData.gridHeight,
+    "grid": gridData.grid
   }
 }
 

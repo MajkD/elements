@@ -1,0 +1,11 @@
+{
+	"startPos": {
+		"x": 300,
+		"y": 300
+	},
+	"tileWidth": 32,
+	"tileHeight": 32,
+	"gridWidth": 100,
+	"gridHeight": 100,
+	"grid": []
+}

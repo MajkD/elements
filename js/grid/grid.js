@@ -12,26 +12,33 @@ Grid = function(worldData) {
 }
 
 Grid.prototype.getSaveData = function() {
+  return {
+    "tileWidth": this.tileWidth,
+    "tileHeight": this.tileHeight,
+    "gridWidth": this.numTilesX,
+    "gridHeight": this.numTilesY,
+    "grid": this.gatherGridData()
+  }
+}
+
+Grid.prototype.gatherGridData = function() {
   var saveGrid = [];
-  for(var x = 0; x < this.numTilesX; x++) {
+  for(var x = 0; x <  this.numTilesX; x++) {
     saveGrid[x] = [];
-    for(var y = 0; y < this.numTilesY; y++) {
-      var index = (x * this.numTilesX) + y;
-      // log("index: " + index);
+    for(var y = 0; y <  this.numTilesY; y++) {
+      var index = (x *  this.numTilesX) + y;
       if(this.tiles[this.grid[index]]) {
         saveGrid[x][y] = 1;  
       } else {
-        // log("node tile on index: " + index);
         saveGrid[x][y] = 0;
       }
-      // log("------")
     }
   }
-  // log(saveGrid)
   return saveGrid;
 }
 
 Grid.prototype.initGrid = function() {
+  if(this.loadedGrid.length == 0) return;
   for(var x = 0; x < this.numTilesX; x++) {
     for(var y = 0; y < this.numTilesY; y++) {
       if(this.loadedGrid[x][y] == 1) {
@@ -74,29 +81,46 @@ Grid.prototype.collide = function(collidingArea) {
 }
 
 Grid.prototype.removeTileCyclic = function(index) {
-  var lastTile = this.tiles[this.tiles.length-1];
-  var x = parseInt(lastTile.pos.x / this.tileWidth);
-  var y = parseInt(lastTile.pos.y / this.tileHeight);
-  var lastTileGridIndex = (x * this.numTilesX) + y;
-  this.grid[lastTileGridIndex] = this.grid[index];
-  this.tiles[this.grid[index]] = this.tiles[this.tiles.length-1];
-  this.tiles.pop();
-  this.grid[index] = undefined;
+  if(this.tiles.length == 1) {
+    this.tiles.pop();
+  } else {
+    var lastTile = this.tiles[this.tiles.length-1];
+    var x = parseInt(lastTile.pos.x / this.tileWidth);
+    var y = parseInt(lastTile.pos.y / this.tileHeight);
+    var lastTileGridIndex = (x * this.numTilesX) + y;
+    this.grid[lastTileGridIndex] = this.grid[index];
+    this.tiles[this.grid[index]] = this.tiles[this.tiles.length-1];
+    this.tiles.pop();
+    this.grid[index] = undefined;
+  }
 }
 
 Grid.prototype.clickTile = function(pos) {
-  var x = parseInt(pos.x / this.tileWidth);
-  var y = parseInt(pos.y / this.tileHeight);
-  var index = (x * this.numTilesX) + y;
-  if(this.grid[index]) {
-    this.removeTileCyclic(index);
-  } else {
-    var tilePos = { x: x * this.tileWidth, y: y * this.tileHeight }
-    var tile = new Tile(this.tileWidth, this.tileHeight, tilePos);
-    this.tiles.push(tile);
+  if(this.withinGridBounds(pos)) {
+    var x = parseInt(pos.x / this.tileWidth);
+    var y = parseInt(pos.y / this.tileHeight);
     var index = (x * this.numTilesX) + y;
-    this.grid[index] = this.tiles.length - 1;
+    if(this.tiles[this.grid[index]]) {
+      this.removeTileCyclic(index);
+    } else {
+      var tilePos = { x: x * this.tileWidth, y: y * this.tileHeight }
+      var tile = new Tile(this.tileWidth, this.tileHeight, tilePos);
+      this.tiles.push(tile);
+      var index = (x * this.numTilesX) + y;
+      this.grid[index] = this.tiles.length - 1;
+    }
+  } else {
+    log("clicked outside grid bounds...");
   }
+}
+
+Grid.prototype.withinGridBounds = function(pos) {
+  if(pos.x <= (this.tileWidth * this.numTilesX)) {
+    if(pos.y <= (this.tileHeight * this.numTilesY)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 Grid.prototype.render = function() {

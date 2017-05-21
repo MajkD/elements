@@ -1,11 +1,10 @@
 - Package game mac and windows
 - Show verson in game from git
 
-- Start map from scratch
-
 // ------ TODO
 
 - Rewrite collision into more exact collision system (sprite instead of square)
+- Make it possible to import from smaller map to bigger
 
 //------ BUGS
 
