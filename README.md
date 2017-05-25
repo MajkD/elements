@@ -12,5 +12,5 @@
 electron-packager /Users/mdanielsson/play/elements elements --all --electron-version=1.6.8 --out~/Desktop/testbuild --overwrite
 
 # Attach Debugger
-lldb ~/Desktop/testbuild/Electron.app
+lldb ~/Desktop/testbuild/elements.app
 run

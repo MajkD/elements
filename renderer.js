@@ -16,7 +16,7 @@ require('./js/utils/imageLoader.js')
 require('./js/utils/logger.js')
 require('./js/utils/utils.js')
 
-elements_version = 0.001
+elements_version = "0.0.1"
 
 canvas = new Canvas();
 canvas.init();
@@ -90,4 +90,3 @@ function elementsInitialized() {
   document.onkeydown = handleKeyDown;
   setInterval(tick, (1000 / 60));
 }
-

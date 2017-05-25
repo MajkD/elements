@@ -1,8 +1,10 @@
 - Package 
   - Mac
+    - Doesn't work when runnin app with shortcut
     - Figure out how to use params in bulds (maybe separate editor build??)
   - Windows
     - Make work (install xcode?) ---> wine
+  - Figure out how to build to another path
 
 // ------ TODO
 
