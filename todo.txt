@@ -1,4 +1,8 @@
-- Package game mac and windows
+- Package 
+  - Mac
+    - Figure out how to use params in bulds (maybe separate editor build??)
+  - Windows
+    - Make work (install xcode?) ---> wine
 
 // ------ TODO
 
