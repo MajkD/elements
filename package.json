@@ -9,11 +9,13 @@
   "author": "Mikael Danielsson",
   "license": "MIT",
   "devDependencies": {
-    "electron": "~1.6.2"
+    "electron": "~1.6.2",
+    "electron-packager": "^8.7.0",
+    "jsonfile": "^3.0.0"
   },
   "dependencies": {
+    "electron": "~1.6.2",
     "electron-log": "^2.2.2",
-    "jsonfile": "^3.0.0",
-    "electron": "~1.6.2"
+    "jsonfile": "^3.0.0"
   }
 }

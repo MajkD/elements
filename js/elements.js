@@ -14,7 +14,7 @@ Elements.prototype.init = function(onElementsInitialized) {
   } else {
     var _this = this;
     var fileReader = require('jsonfile')
-    fileReader.readFile("./data/game.json", function(err, gameData) {
+    fileReader.readFile(data_path + "game.json", function(err, gameData) {
       if (err) throw err;
       _this.gameDataLoaded(gameData);
     });
@@ -23,7 +23,7 @@ Elements.prototype.init = function(onElementsInitialized) {
 
 Elements.prototype.gameDataLoaded = function(gameData) {
   if(!isEditor) {
-    var path = "./data/" + gameData.worldData;
+    var path = data_path + gameData.worldData;
     this.world.loadLevel(path, this.worldDataLoaded.bind(this));
   }
 }
@@ -32,7 +32,7 @@ Elements.prototype.worldDataLoaded = function() {
   if(!isEditor) {
     var _this = this;
     var fileReader = require('jsonfile')
-    fileReader.readFile("./data/player/player.json", function(err, playerData) {
+    fileReader.readFile(data_path + "player/player.json", function(err, playerData) {
       if (err) throw err;
       _this.playerDataLoaded(playerData);
     });

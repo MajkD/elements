@@ -9,8 +9,10 @@
 
 
 # Package
-electron-packager /Users/mdanielsson/play/elements elements --all --electron-version=1.6.8 --out~/Desktop/testbuild --overwrite
+electron-packager /Users/mdanielsson/play/elements elements --all --electron-version=1.6.8 --out=/Users/mdanielsson/Desktop/testbuild --overwrite
+
+electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=/Users/mdanielsson/Desktop/testbuild
 
 # Attach Debugger
-lldb ~/Desktop/testbuild/elements.app
+lldb ~/Desktop/testbuild/elements-darwin-x64/elements.app
 run

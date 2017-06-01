@@ -17,6 +17,7 @@ require('./js/utils/logger.js')
 require('./js/utils/utils.js')
 
 elements_version = "0.0.1"
+data_path = __dirname + "/data/"
 
 canvas = new Canvas();
 canvas.init();

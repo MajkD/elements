@@ -6,6 +6,8 @@
     - Make work (install xcode?) ---> wine
   - Figure out how to build to another path
 
+- Handle thrown errors to get a proper error handling 
+
 // ------ TODO
 
 - Rewrite collision into more exact collision system (sprite instead of square)
