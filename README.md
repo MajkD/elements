@@ -2,7 +2,10 @@
 ./node_modules/.bin/electron main.js
 
 #Start Game Debug Mode
-./node_modules/.bin/electron main.js game-debug
+./node_modules/.bin/electron main.js debug-game
+
+#Start Camera Debug Mode
+./node_modules/.bin/electron main.js debug-camera
 
 # Start Editor
 ./node_modules/.bin/electron main.js editor

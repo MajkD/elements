@@ -81,7 +81,7 @@ World.prototype.mapSelected = function() {
 World.prototype.update = function(delta, player) {
 }
 
-World.prototype.render = function() {
+World.prototype.render = function(camera) {
   if(this.grid) {
     this.grid.render();
   }

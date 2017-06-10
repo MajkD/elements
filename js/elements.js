@@ -1,5 +1,6 @@
 require('./world.js')
 require('./player/player.js')
+require('./camera.js')
 
 log = undefined;
 Elements = function(logger) {
@@ -7,6 +8,7 @@ Elements = function(logger) {
 }
 
 Elements.prototype.init = function(onElementsInitialized) {
+  this.camera = new Camera();
   this.onElementsInitialized = onElementsInitialized;
   this.world = new World();
   if(isEditor) {
@@ -42,19 +44,24 @@ Elements.prototype.worldDataLoaded = function() {
 Elements.prototype.playerDataLoaded = function(playerData) {
   this.player = new Player(playerData);
   this.world.initPlayer(this.player);
+  this.camera.init(this.player);
   this.onElementsInitialized();
 }
 
 Elements.prototype.update = function(delta) {
   this.world.update(delta, this.player);
   if(isEditor) return;
+  this.camera.update(this.player);
   this.player.update(delta, this.world.grid);
 }
 
 Elements.prototype.render = function() {
-  this.world.render();
+  this.world.render(this.camera);
   if(isEditor) return;
-  this.player.render();
+  this.player.render(this.camera);
+
+  // For debug purposes
+  this.camera.render();
 }
 
 Elements.prototype.mouseClicked = function() {
@@ -65,16 +72,16 @@ Elements.prototype.mouseClicked = function() {
 
 Elements.prototype.keyDown = function(keyCode) {
   if(isEditor) return;
+  if(debugCamera) {
+    if(keyCode == 87) this.camera.onKeyPressed('w');
+    if(keyCode == 83) this.camera.onKeyPressed('s');
+    if(keyCode == 65) this.camera.onKeyPressed('a');
+    if(keyCode == 68) this.camera.onKeyPressed('d');
+  }
 
-  if(keyCode == 37) {
-    this.player.onLeftDown();
-  }
-  if(keyCode == 39) {
-    this.player.onRightDown();
-  }
-  if(keyCode == 32) {
-    this.player.onSpacePressed();
-  }
+  if(keyCode == 37) this.player.onLeftDown();
+  if(keyCode == 39) this.player.onRightDown();
+  if(keyCode == 32) this.player.onSpacePressed();
 }
 
 Elements.prototype.keyUp = function(keyCode) {

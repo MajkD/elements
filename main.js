@@ -13,9 +13,15 @@ app.on('ready', function() {
   mainWindow.on('closed', function() {
     mainWindow = null;
   });
-  var arg = {args: process.argv}
-  mainWindow.mainArgs = arg.args[2];
+  setMainArgs(mainWindow, {args: process.argv});
 });
+
+function setMainArgs(mainWindow, arg) {
+  mainWindow.mainArgs = []
+  for(var index = 2; index < arg.args.length; index++) {
+    mainWindow.mainArgs.push(arg.args[index]);
+  }
+}
 
 var ipc = require('electron').ipcMain;
 ipc.on('errorInWindow', function(event, data){

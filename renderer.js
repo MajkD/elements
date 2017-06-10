@@ -36,6 +36,15 @@ function handleKeyUp(event) {
 }
 
 function handleKeyDown(event) {
+  if(debugCamera) {
+    if(event.keyCode == 87 ||
+       event.keyCode == 65 ||
+       event.keyCode == 83 ||
+       event.keyCode == 68) {
+      elements.keyDown(event.keyCode);
+    }
+  }
+
   if(!event.repeat) {
     elements.keyDown(event.keyCode);
   }
@@ -67,15 +76,20 @@ function render() {
   screenLogger.render();
 }
 
-debugMode = false;
+debugCamera = false;
+debugGame = false;
 isEditor = false;
 var args = electron.remote.getCurrentWindow().mainArgs;
-if(args == "editor") {
+if(args.indexOf("editor") != -1) {
   isEditor = true;
   inputDialog = document.createElement('input');
   inputDialog.type = 'file';
-} else if(args == "game-debug") {
-  debugMode = true;
+} 
+if(args.indexOf("debug-game") != -1) {
+  debugGame = true;
+}
+if(args.indexOf("debug-camera") != -1) {
+  debugCamera = true;
 }
 
 utils.updateWindowTitle("");

@@ -24,7 +24,7 @@ Tile.prototype.getMiddlePoint = function() {
 Tile.prototype.render = function() {
   var img = imageLoader.getImage("tile");
 
-  if(debugMode) {
+  if(debugGame) {
     if(this.marked) {
       var now = Date.now();
       var diff = now - this.timeMarked;

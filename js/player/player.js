@@ -16,7 +16,7 @@ Player = function(playerData) {
 
   // Image
   var img = imageLoader.getImage(playerData.image);
-  this.dimensions = { "width": img.width, "height": img.height };  
+  this.dimensions = { "width": img.width, "height": img.height };
   // Collision
   this.collisionOffset = playerData.collisionOffset;
   this.collisionSideOffset = playerData.collisionSideOffset;
@@ -27,6 +27,19 @@ Player = function(playerData) {
   this.walkingAcceleration = playerData.walkingAcceleration;
   this.walkingFriction = playerData.walkingFriction;
   this.maxMovementVelocity = playerData.maxMovementVelocity;
+}
+
+Player.prototype.centerPos = function() {
+  return { x: this.pos.x + this.dimensions.width * 0.5,
+           y: this.pos.y + this.dimensions.height * 0.5 };
+}
+
+Player.prototype.calcBounds = function() {
+  var width = this.dimensions.width;
+  var height = this.dimensions.height;
+  return { topLeft: { x: this.pos.x, y: this.pos.y },
+           bottomRight: { x: this.pos.x + width, y: this.pos.y + height } 
+         }
 }
 
 Player.prototype.setStartPos = function(x, y) {
@@ -130,7 +143,7 @@ Player.prototype.fallingCollision = function(grid) {
   var collisionArea = this.getCollidingFeetArea();
   var collidedTiles = grid.collide(collisionArea);
   if(collidedTiles.length > 0) {
-    if(debugMode) {
+    if(debugGame) {
       this.markCollidedTiles(collidedTiles, collisionArea);
     }
     this.onGroundCollision(collidedTiles);
@@ -142,7 +155,7 @@ Player.prototype.walkingCollision = function(grid) {
   var collisionArea = this.getCollidingFrontArea();
   var collidedTiles = grid.collide(collisionArea);
   if(collidedTiles.length > 0) {
-    if(debugMode) {
+    if(debugGame) {
       this.markCollidedTiles(collidedTiles, collisionArea);
     }
     this.onWalkCollision(collidedTiles);
@@ -160,7 +173,7 @@ Player.prototype.jumpingCollision = function(grid) {
   var collisionArea = this.getCollidingHeadArea();
   var collidedTiles = grid.collide(collisionArea);
   if(collidedTiles.length > 0) {
-    if(debugMode) {
+    if(debugGame) {
       this.markCollidedTiles(collidedTiles, collisionArea);
     }
     this.onRoofCollision(collidedTiles);
@@ -276,8 +289,11 @@ Player.prototype.updatePos = function(delta) {
   this.pos.y += this.velocity.y * delta;
 }
 
-Player.prototype.render = function() {
-  if(debugMode) {
+Player.prototype.render = function(camera) {
+  if(!camera.boundsOverlap(this.calcBounds())) {
+    return;
+  }
+  if(debugGame) {
     var a = { x: this.pos.x, y: this.pos.y };
     var b = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height };
     utils.renderSquare(a, b, "white");
