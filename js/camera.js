@@ -40,24 +40,14 @@ Camera.prototype.update = function(player) {
   this.focusOnPlayer(player);
 }
 
-Camera.prototype.boundsOverlap = function(bounds) {
-  return true;
+Camera.prototype.inCameraView = function(bounds) {
+  return utils.rectangleOverlap(bounds, this.calcBounds());
 }
-
-// The rectangles don't overlap if
-    // one rectangle's minimum in some dimension 
-    // is greater than the other's maximum in
-    // that dimension.
-
-    // bool noOverlap = r1.x1 > r2.x2 ||
-    //                  r2.x1 > r1.x2 ||
-    //                  r1.y1 > r2.y2 ||
-    //                  r2.y1 > r1.y2;
 
 Camera.prototype.pointOverlap = function(point) {
   var cameraBounds = this.calcBounds();
-  if(point.x >= cameraBounds.topLeft.x && point.x <= cameraBounds.bottomRight.x) {
-    if(point.y >= cameraBounds.topLeft.y && point.y <= cameraBounds.bottomRight.y) {
+  if(point.x >= cameraBounds.p1.x && point.x <= cameraBounds.p2.x) {
+    if(point.y >= cameraBounds.p1.y && point.y <= cameraBounds.p2.y) {
       return true
     } 
   }
@@ -65,14 +55,14 @@ Camera.prototype.pointOverlap = function(point) {
 }
 
 Camera.prototype.calcBounds = function() {
-  return { topLeft: { x: this.position.x - (this.width * 0.5), y: this.position.y - (this.height * 0.5) },
-           bottomRight: { x: this.position.x + (this.width * 0.5), y: this.position.y + (this.height * 0.5) }}
+  return { p1: { x: this.position.x - (this.width * 0.5), y: this.position.y - (this.height * 0.5) },
+           p2: { x: this.position.x + (this.width * 0.5), y: this.position.y + (this.height * 0.5) }}
 }
 
 Camera.prototype.render = function() {
   if(debugCamera) {
     var bounds = this.calcBounds();
-    utils.renderSquare(bounds.topLeft, bounds.bottomRight, "green");
+    utils.renderSquare(bounds.p1, bounds.p2, "green");
   } 
 }
 

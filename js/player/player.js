@@ -37,8 +37,8 @@ Player.prototype.centerPos = function() {
 Player.prototype.calcBounds = function() {
   var width = this.dimensions.width;
   var height = this.dimensions.height;
-  return { topLeft: { x: this.pos.x, y: this.pos.y },
-           bottomRight: { x: this.pos.x + width, y: this.pos.y + height } 
+  return { p1: { x: this.pos.x, y: this.pos.y },
+           p2: { x: this.pos.x + width, y: this.pos.y + height } 
          }
 }
 
@@ -290,7 +290,7 @@ Player.prototype.updatePos = function(delta) {
 }
 
 Player.prototype.render = function(camera) {
-  if(!camera.boundsOverlap(this.calcBounds())) {
+  if(!camera.inCameraView(this.calcBounds())) {
     return;
   }
   if(debugGame) {

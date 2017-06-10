@@ -1,6 +1,11 @@
 Utils = function () {
 }
 
+Utils.prototype.rectangleOverlap = function(rect1, rect2) {
+  return Math.max(rect1.p1.x, rect2.p1.x) < Math.min(rect1.p2.x, rect2.p2.x) &&
+         Math.max(rect1.p1.y, rect2.p1.y) < Math.min(rect1.p2.y, rect2.p2.y);
+}
+
 Utils.prototype.clamp = function(value, min, max) {
   return Math.max(Math.min(value, max), min);
 }
