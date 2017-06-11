@@ -1,5 +1,7 @@
 - Camera handling Game
+  - Cap camera pos end of grid
 - Camera handling Editor
+   - move camera around, zoom in and out (also game feature?)
 
 - Package 
   - Mac

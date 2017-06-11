@@ -123,10 +123,12 @@ Grid.prototype.withinGridBounds = function(pos) {
   return false;
 }
 
-Grid.prototype.render = function() {
+Grid.prototype.render = function(camera) {
   var length = this.tiles.length;
   for(var index = 0; index < length; index++) {
-    this.tiles[index].render();
+    if(camera.inCameraView(this.tiles[index].getBounds())) {
+      this.tiles[index].render(camera);
+    }
   }
 }
 

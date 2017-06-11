@@ -83,7 +83,7 @@ World.prototype.update = function(delta, player) {
 
 World.prototype.render = function(camera) {
   if(this.grid) {
-    this.grid.render();
+    this.grid.render(camera);
   }
 }
 

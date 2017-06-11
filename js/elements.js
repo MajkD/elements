@@ -61,7 +61,7 @@ Elements.prototype.render = function() {
   this.player.render(this.camera);
 
   // For debug purposes
-  this.camera.render();
+  // this.camera.renderDebug();
 }
 
 Elements.prototype.mouseClicked = function() {

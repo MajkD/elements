@@ -34,7 +34,7 @@ Player.prototype.centerPos = function() {
            y: this.pos.y + this.dimensions.height * 0.5 };
 }
 
-Player.prototype.calcBounds = function() {
+Player.prototype.getBounds = function() {
   var width = this.dimensions.width;
   var height = this.dimensions.height;
   return { p1: { x: this.pos.x, y: this.pos.y },
@@ -290,19 +290,19 @@ Player.prototype.updatePos = function(delta) {
 }
 
 Player.prototype.render = function(camera) {
-  if(!camera.inCameraView(this.calcBounds())) {
+  if(!camera.inCameraView(this.getBounds())) {
     return;
   }
   if(debugGame) {
     var a = { x: this.pos.x, y: this.pos.y };
     var b = { x: this.pos.x + this.dimensions.width, y: this.pos.y + this.dimensions.height };
-    utils.renderSquare(a, b, "white");
+    camera.renderSquare(a, b, "white");
   } else {
     var img = imageLoader.getImage("player");
     if(this.isJumping()) {
       img = imageLoader.getImage("player_jump");
     }
-    canvas.context.drawImage(img, this.pos.x, this.pos.y, img.width, img.height);
+    camera.renderImage(img, this.pos.x, this.pos.y, img.width, img.height);
   }
 }
 
