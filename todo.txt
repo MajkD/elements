@@ -2,6 +2,9 @@
   - Cap camera pos end of grid
 - Camera handling Editor
    - move camera around, zoom in and out (also game feature?)
+   - WIP
+    - Camera bounds needs to change when zoom
+    - Camera center needs to change when zoom
 
 - Package 
   - Mac

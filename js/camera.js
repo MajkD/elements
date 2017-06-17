@@ -1,25 +1,41 @@
 require('./utils/vector.js')
 
 Camera = function() {
-  this.width = 1024;
-  this.height = 720;
+  // this.width = 1024;
+  // this.height = 720;
+
+  this.width = 500;
+  this.height = 400;
+  this.cameraRenderOffset = { x: 0, y: 0 };
   this.position = { x: 0, y: 0 };
+  this.zoom = 1;
+  this.maxZoom = 2;
+  this.minZoom = 0.5;
 }
 
 Camera.prototype.onKeyPressed = function(key) {
   if(!debugCamera) return;
   var step = 10;
+  var zoomStep = 0.1;
   if (key == 'w') {
-    this.position.y -= step;  
+    this.position.y -= step;
   }
   if (key == 's') {
-    this.position.y += step;  
+    this.position.y += step;
   }
   if (key == 'a') {
-    this.position.x -= step;  
+    this.position.x -= step;
   }
   if (key == 'd') {
-    this.position.x += step;  
+    this.position.x += step;
+  }
+  if (key == 'q') {
+    this.zoom = utils.clamp(this.zoom - zoomStep, this.minZoom, this.maxZoom);
+    log(this.zoom);
+  }
+  if (key == 'e') {
+    this.zoom = utils.clamp(this.zoom + zoomStep, this.minZoom, this.maxZoom);
+    log(this.zoom);
   }
 }
 
@@ -33,11 +49,12 @@ Camera.prototype.init = function(player) {
   this.focusOnPlayer(player);
 }
 
-Camera.prototype.update = function(player) {
+Camera.prototype.update = function(player, world) {
   if(debugCamera && (player.velocity.x == 0 && player.velocity.y == 0)) {
     return;
   }
   this.focusOnPlayer(player);
+  // log(world);
 }
 
 Camera.prototype.inCameraView = function(bounds) {
@@ -59,13 +76,30 @@ Camera.prototype.getBounds = function() {
            p2: { x: this.position.x + (this.width * 0.5), y: this.position.y + (this.height * 0.5) }}
 }
 
-Camera.prototype.renderImage = function(img, xPos, yPos, width, height) {
+Camera.prototype.getTopLeft = function() {
   var topLeft = this.getBounds().p1;
-  canvas.context.drawImage(img, xPos - topLeft.x, yPos - topLeft.y, width, height);
+  topLeft.x -= this.cameraRenderOffset.x;
+  topLeft.y -= this.cameraRenderOffset.y;
+  return topLeft;
+}
+
+Camera.prototype.getScale = function() {
+  return this.maxZvalue - this.position.z;
+}
+
+Camera.prototype.getZoom = function() {
+  return this.zoom;
+}
+
+Camera.prototype.renderImage = function(img, xPos, yPos, width, height) {
+  var cameraTopLeft = this.getTopLeft();
+  var scale = this.getZoom();
+  var imageTopLeft =  { x: (xPos - cameraTopLeft.x) * scale, y: (yPos - cameraTopLeft.y) * scale };
+  canvas.context.drawImage(img, imageTopLeft.x, imageTopLeft.y, width * scale, height * scale);
 }
 
 Camera.prototype.renderFilledSquare = function(pointA, pointB, color) {
-  var topLeft = this.getBounds().p1;
+  var topLeft = this.getTopLeft();
   var p1 = { x: pointA.x - topLeft.x, y: pointA.y - topLeft.y }
   var p2 = { x: pointB.x - topLeft.x, y: pointB.y - topLeft.y }
   
@@ -78,7 +112,7 @@ Camera.prototype.renderFilledSquare = function(pointA, pointB, color) {
 }
 
 Camera.prototype.renderSquare = function(pointA, pointB, color) {
-  var topLeft = this.getBounds().p1;
+  var topLeft = this.getTopLeft();
   var p1 = { x: pointA.x - topLeft.x, y: pointA.y - topLeft.y }
   var p2 = { x: pointB.x - topLeft.x, y: pointB.y - topLeft.y }
 

@@ -51,7 +51,7 @@ Elements.prototype.playerDataLoaded = function(playerData) {
 Elements.prototype.update = function(delta) {
   this.world.update(delta, this.player);
   if(isEditor) return;
-  this.camera.update(this.player);
+  this.camera.update(this.player, this.world);
   this.player.update(delta, this.world.grid);
 }
 
@@ -77,6 +77,8 @@ Elements.prototype.keyDown = function(keyCode) {
     if(keyCode == 83) this.camera.onKeyPressed('s');
     if(keyCode == 65) this.camera.onKeyPressed('a');
     if(keyCode == 68) this.camera.onKeyPressed('d');
+    if(keyCode == 81) this.camera.onKeyPressed('q');
+    if(keyCode == 69) this.camera.onKeyPressed('e');
   }
 
   if(keyCode == 37) this.player.onLeftDown();
