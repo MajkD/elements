@@ -2,6 +2,9 @@
 
 Working name of a WIP game project building an "engine" for developing a platformer game in html5, using electron for launching game as a separate app.
 
+# Install
+npm install
+
 # Start Game
 ./node_modules/.bin/electron main.js
 
